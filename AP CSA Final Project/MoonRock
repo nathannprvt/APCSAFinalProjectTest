@@ -1,0 +1,23 @@
+public class DamageBooster {
+    private double boostPercentage;
+
+    public DamageBooster() {
+        // Generate a random boost percentage between 10% and 100%
+        this.boostPercentage = 10 + Math.random() * 90;
+    }
+
+    public double getBoostPercentage() {
+        return boostPercentage;
+    }
+
+    public double applyBoost(double baseDamage) {
+        return baseDamage * (1 + boostPercentage / 100);
+    }
+
+    @Override
+    public String toString() {
+        return "DamageBooster{" +
+                "boostPercentage=" + boostPercentage +
+                "%}";
+    }
+}
