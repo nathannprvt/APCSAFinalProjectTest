@@ -1,7 +1,11 @@
 public class UFO extends Alien {
     // Constructor
-    public UFO(String name, int health, int damage) {
-        super(name, health, damage);
+    private String name = "UFO";
+    private int damageOutput;
+    private int health = 100;
+    
+    public UFO(int damage) {
+        super(damage);
     }
 
     // Additional methods specific to UFO can be added here

@@ -1,12 +1,10 @@
 public class Alien {
-    private String name;
+    private String name = "Alien";
     private int damageOutput;
-    private int health;
+    private int health = 100;
 // Constructor
-public Alien(String name, int damageOutput, int health) {
-    this.name = name;
-    this.damageOutput = damageOutput;
-    this.health = health;
+public Alien(int damageOutput) {
+    this.damageOutput = (int) (Math.random() * 11) + 10;
 }
 
 // Getter for name
@@ -44,4 +42,5 @@ public void setHealth(int health) {
 public String toString() {
     return "Alien{name='" + name + "', damageOutput=" + damageOutput + ", health=" + health + "}";
 }
+
 }
