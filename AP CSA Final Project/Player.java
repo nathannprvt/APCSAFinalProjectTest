@@ -1,3 +1,6 @@
+/**
+ * Player class that the user will control.
+ */
 public class Player {
     private String name;
     private int health = 100;
@@ -30,7 +33,7 @@ public class Player {
     }
 
     public void setExperienceLevel(int experienceLevel) {
-        this.experienceLevel = experienceLevel;
+        this.experienceLevel += experienceLevel;
     }
 
     // Method to display player information

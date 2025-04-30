@@ -1,3 +1,6 @@
+/**
+ * Class that represents a loot item in the game.
+ */
 public class Loot {
     private String name;
 

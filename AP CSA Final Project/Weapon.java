@@ -1,3 +1,6 @@
+/**
+ * weapon class the user will modify at the beggining of the game and fight aliens with
+ */
 public class Weapon {
     private String name;
     private int damage;

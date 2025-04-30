@@ -1,8 +1,11 @@
+/**
+ * This class has the main method to run the game.
+ */
 import java.util.Scanner;
 
 public class Tester {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        try (Scanner scanner = new Scanner(System.in)) {
 
         // Welcome the user to the game
         System.out.println("Welcome to Moon Explorer!");
@@ -28,29 +31,51 @@ public class Tester {
         scanner.nextLine(); // Consume newline
 
         // Set weapon details
-        Weapon playerWeapon = new Weapon(weapon, weaponDamage);
+        new Weapon(weapon, weaponDamage); // Initialize weapon but do not store unused variable
 
         // Initialize player health and map
         int playerHealth = 100; // Initial player health
-        int[][] grid = new int[5][5];
+        // Removed unused grid variable
         boolean[][] clearedTiles = new boolean[5][5]; // Track cleared tiles
         int clearedCount = 0;
 
+        // Declare surrendered variable
+        boolean surrendered = false;
+
+        // Alien and UFO representations as 2D arrays
+        String[][] alienRepresentation = {
+            {"   .-\"\"\"\"\"-.   "},
+            {"  /         \\  "},
+            {" /  O     O  \\ "},
+            {"|     .-.     |"},
+            {" \\   '---'   / "},
+            {"  '-._____.-'  "}
+        };
+
+        String[][] ufoRepresentation = {
+            {"     _____     "},
+            {"  __/     \\__  "},
+            {" /  o       o \\ "},
+            {"|               |"},
+            {" \\__       __/  "},
+            {"    \\_____/     "}
+        };
+
         // Game loop
-        while (playerHealth > 0 && clearedCount < 25) {
+        while (playerHealth > 0 && clearedCount < 25 && !surrendered) {
             // Display the 5x5 grid with cleared tiles marked
             System.out.println("This is your map:");
             for (int i = 0; i < 5; i++) {
-            System.out.println("+---+---+---+---+---+"); // Top border of each row
-            for (int j = 0; j < 5; j++) {
-                int currentTile = i * 5 + j + 1;
-                if (clearedTiles[i][j]) {
-                System.out.print("| X "); // Mark cleared tiles
-                } else {
-                System.out.print("| " + currentTile + (currentTile < 10 ? " " : ""));
+                System.out.println("+---+---+---+---+---+"); // Top border of each row
+                for (int j = 0; j < 5; j++) {
+                    int currentTile = i * 5 + j + 1;
+                    if (clearedTiles[i][j]) {
+                        System.out.print("| X "); // Mark cleared tiles
+                    } else {
+                        System.out.print("| " + currentTile + (currentTile < 10 ? " " : ""));
+                    }
                 }
-            }
-            System.out.println("|"); // Right border of the row
+                System.out.println("|"); // Right border of the row
             }
             System.out.println("+---+---+---+---+---+"); // Bottom border of the grid
 
@@ -60,30 +85,30 @@ public class Tester {
 
             // Check if the user wants to surrender
             if (input.equalsIgnoreCase("surrender")) {
-            System.out.println("You have chosen to surrender. Game Over.");
-            break;
+                surrendered = true; // Set surrendered to true when the player chooses to quit
+                break;
             }
 
             int tileChoice;
             try {
-            tileChoice = Integer.parseInt(input);
+                tileChoice = Integer.parseInt(input);
             } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a number between 1 and 25 or 'surrender'.");
-            continue;
+                System.out.println("Invalid input. Please enter a number between 1 and 25 or 'surrender'.");
+                continue;
             }
 
             // Validate the tile choice
             if (tileChoice < 1 || tileChoice > 25) {
-            System.out.println("Invalid tile number. Please choose a number between 1 and 25.");
-            continue;
+                System.out.println("Invalid tile number. Please choose a number between 1 and 25.");
+                continue;
             }
 
             int row = (tileChoice - 1) / 5;
             int col = (tileChoice - 1) % 5;
 
             if (clearedTiles[row][col]) {
-            System.out.println("This tile has already been cleared. Choose another tile.");
-            continue;
+                System.out.println("This tile has already been cleared. Choose another tile.");
+                continue;
             }
 
             System.out.println("You have chosen to move to tile " + tileChoice + " located at row " + (row + 1) + ", column " + (col + 1) + ".");
@@ -94,25 +119,25 @@ public class Tester {
             int enemyHealth = (int) (Math.random() * 50) + 50; // Random health between 50 and 100
             int enemyDamage = (int) (Math.random() * 10) + 10; // Random damage between 10 and 20
 
+            // If the enemy is a UFO, add a random speed variable
+            int enemySpeed = 0;
+            if (enemyType.equals("UFO")) {
+                enemySpeed = (int) (Math.random() * 31) + 20; // Random speed between 20 and 50
+                System.out.println("The UFO has a speed of " + enemySpeed + ".");
+            }
+
             // Display enemy appearance
+            System.out.println("Prepare for a fight!");
             if (enemyType.equals("Alien")) {
-            System.out.println("Prepare for a fight!");
-            System.out.println("You have encountered a Lunar Alien!");
-            System.out.println("   .-\"\"\"\"\"-.   ");
-            System.out.println("  /         \\  ");
-            System.out.println(" /  O     O  \\ ");
-            System.out.println("|     .-.     |");
-            System.out.println(" \\   '---'   / ");
-            System.out.println("  '-._____.-'  ");
+                System.out.println("You have encountered a Lunar Alien!");
+                for (String[] line : alienRepresentation) {
+                    System.out.println(line[0]);
+                }
             } else {
-            System.out.println("Prepare for a fight!");
-            System.out.println("You have encountered a Flying UFO!");
-            System.out.println("     _____     ");
-            System.out.println("  __/     \\__  ");
-            System.out.println(" /  o       o \\ ");
-            System.out.println("|               |");
-            System.out.println(" \\__       __/  ");
-            System.out.println("    \\_____/     ");
+                System.out.println("You have encountered a Flying UFO!");
+                for (String[] line : ufoRepresentation) {
+                    System.out.println(line[0]);
+                }
             }
 
             System.out.println("Health: " + enemyHealth);
@@ -120,59 +145,88 @@ public class Tester {
 
             // Combat loop
             while (playerHealth > 0 && enemyHealth > 0) {
-            // Player's turn to attack
-            System.out.println("Your turn to attack!");
-            System.out.println("You attack the " + enemyName + " with your " + weapon + ".");
-            enemyHealth -= weaponDamage;
-            if (enemyHealth <= 0) {
-                System.out.println("You have defeated the " + enemyName + "!");
-                break;
-            }
-            System.out.println("The " + enemyName + " now has " + enemyHealth + " health remaining.");
+                // Player's turn to attack
+                System.out.println("Your turn to attack!");
+                System.out.println("You attack the " + enemyName + " with your " + weapon + ".");
+                
+                // Check if the enemy is a UFO and if it dodges the attack
+                if (enemyType.equals("UFO")) {
+                    int dodgeChance = (int) (Math.random() * 100) + 1; // Random chance between 1 and 100
+                    if (dodgeChance <= enemySpeed) {
+                        System.out.println("The UFO dodged your attack with its speed of " + enemySpeed + "!");
+                    } else {
+                        enemyHealth -= weaponDamage;
+                        if (enemyHealth <= 0) {
+                            System.out.println("You have defeated the " + enemyName + "!");
+                            break;
+                        }
+                        System.out.println("The " + enemyName + " now has " + enemyHealth + " health remaining.");
+                    }
+                } else {
+                    // Regular attack for non-UFO enemies
+                    enemyHealth -= weaponDamage;
+                    if (enemyHealth <= 0) {
+                        System.out.println("You have defeated the " + enemyName + "!");
+                        break;
+                    }
+                    System.out.println("The " + enemyName + " now has " + enemyHealth + " health remaining.");
+                }
 
-            // Enemy's turn to attack
-            System.out.println("The " + enemyName + " attacks you!");
-            playerHealth -= enemyDamage;
-            if (playerHealth <= 0) {
-                System.out.println("You have been defeated by the " + enemyName + "...");
-                break;
-            }
-            System.out.println("You now have " + playerHealth + " health remaining.");
+                // Enemy's turn to attack
+                System.out.println("The " + enemyName + " attacks you!");
+                playerHealth -= enemyDamage;
+                if (playerHealth <= 0) {
+                    System.out.println("You have been defeated by the " + enemyName + "...");
+                    break;
+                }
+                System.out.println("You now have " + playerHealth + " health remaining.");
             }
 
             // End of combat
             if (playerHealth > 0) {
-            System.out.println("Congratulations! You survived the encounter.");
-            clearedTiles[row][col] = true;
-            clearedCount++;
+                System.out.println("Congratulations! You survived the encounter.");
+                clearedTiles[row][col] = true;
+                clearedCount++;
 
-            // Loot system after the battle
-            System.out.println("You have won the battle! Time to collect your loot.");
-            String[] lootOptions = {"Health Potion", "Damage Boost"};
-            String loot = lootOptions[(int) (Math.random() * lootOptions.length)];
+                // Loot system after the battle
+                System.out.println("You have won the battle! Time to collect your loot.");
+                String[] lootOptions = {"Health Potion", "Damage Boost", "Experience"};
+                String loot = lootOptions[(int) (Math.random() * lootOptions.length)];
 
-            if (loot.equals("Health Potion")) {
-                int healthRestored = (int) (Math.random() * 20) + 10; // Random health between 10 and 30
-                playerHealth = Math.min(playerHealth + healthRestored, 100); // Cap health at 100
-                System.out.println("You found a Health Potion! Restored " + healthRestored + " health.");
-                System.out.println("Your current health is now: " + playerHealth);
-            } else if (loot.equals("Damage Boost")) {
-                int damageBoost = (int) (Math.random() * 5) + 5; // Random boost between 5 and 10
-                weaponDamage += damageBoost;
-                System.out.println("You found a Damage Boost! Your weapon damage increased by " + damageBoost + ".");
-                System.out.println("Your current weapon damage is now: " + weaponDamage);
-            }
+                if (loot.equals("Health Potion")) {
+                    BandAid healthPotion = new BandAid();
+                    healthPotion.healPlayer(player);
+                    System.out.println("You found a Health Potion!");
+                    System.out.println("Your current health is now: " + playerHealth);
+                } else if (loot.equals("Damage Boost")) {
+                    MoonRock damageBooster = new MoonRock();
+                    int damageBoost = (int) damageBooster.use(weaponDamage);
+                    weaponDamage = damageBoost;
+                    System.out.println("You found a Damage Boost! Your weapon damage increased by " + (int)damageBooster.getBoostPercentage() + "%.");
+                    System.out.println("Your current weapon damage is now: " + weaponDamage);
+                } else if(loot.equals("Experience")) {
+                    int experiencePoints = XP.generateExperience();
+                    clearedCount += 1; 
+                    System.out.println("You found some Experience Points! Your experience increased by " + experiencePoints + ".");
+                    System.out.println("Your current experience level is now: " + clearedCount);
+                    player.setExperienceLevel(experiencePoints); // Assuming Player class has a method to set experience level
+                }
+
+                // Display player's stats after the battle
+                System.out.println("Your current stats:");
+                System.out.println("Health: " + playerHealth);
+                System.out.println("Damage Output: " + weaponDamage);
+                System.out.println("Experience Level: " + player.getExperienceLevel()); // Using clearedCount as experience level
             } else {
-            System.out.println("Game Over. Better luck next time!");
-            break;
+                System.out.println("Game Over. Better luck next time!");
+                break;
             }
         }
-
-        // End of game
-        if (playerHealth > 0) {
-            System.out.println("Congratulations! You have cleared the entire map and won the game!");
-        } else {
-            System.out.println("Game Over. You were unable to complete the map.");
+        if(surrendered) {
+            System.out.println("You have surrendered. Game Over.");
+        } else if (clearedCount >= 25) {
+            System.out.println("Congratulations! You have cleared all tiles and won the game!");
         }
     }
+}
 }

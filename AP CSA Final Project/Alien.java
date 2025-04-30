@@ -1,3 +1,10 @@
+/**
+ * alien class which is a superclass
+ * of the UFO class and represents
+ * the objects the user will fight
+ * against in the game.
+ * 
+ */
 public class Alien {
     private String name = "Alien";
     private int damageOutput;
